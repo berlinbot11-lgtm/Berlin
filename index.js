@@ -515,7 +515,6 @@ async function updateButtonStats(buttonId, userId) {
 // =================================================================
 // |                       Bot Commands & Logic                      |
 // =================================================================
-
 bot.start(async (ctx) => {
     const client = await getClient();
     try {
@@ -564,11 +563,16 @@ bot.start(async (ctx) => {
         }
 
         const settingsResult = await client.query('SELECT welcome_message FROM public.settings WHERE id = 1');
-        const welcomeMessage = settingsResult.rows[0]?.welcome_message || 'أهلاً بك في البوت!';
-        await ctx.reply(welcomeMessage, Markup.keyboard(await generateKeyboard(userId)).resize());
+        const welcomeMessageFromDB = settingsResult.rows[0]?.welcome_message || 'أهلاً بك في البوت!';
+        
+        // ✨ التعديل هنا: إضافة السطر المطلوب بشكل دائم
+        const finalWelcomeMessage = `${welcomeMessageFromDB}\n\n❗Bot made by: @aw478260`;
+
+        await ctx.reply(finalWelcomeMessage, Markup.keyboard(await generateKeyboard(userId)).resize());
     } catch (error) { console.error("FATAL ERROR in bot.start:", error, "Update:", ctx.update); }
     finally { client.release(); }
 });
+
 
 // --- أوامر الإدارة الجديدة (حظر، فك حظر، معلومات) ---
 
